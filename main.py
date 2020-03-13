@@ -16,21 +16,59 @@ class Iterator1():
 
 class Iterator2():
 	def __init__(self, nbrValues):
-		self.i = 1
+		self.i = 0
+		self.nbrPrimes = 0
 		self.nbrValues = nbrValues
 
 	def __iter__(self):
 		return self
 
 	def __next__(self):
-		if self.i <= self.nbrValues:
-			result = self.i
-			self.i += 1
-			for number in range(2, result // 2):
-				if (result % number) != 0:
-					return result
+		self.i += 1
+		if self.nbrPrimes < self.nbrValues:
+			while True:
+				if IsPrime(self.i):
+					self.nbrPrimes += 1
+					break
+				else:
+					self.i += 1
+			return self.i
 		else:
 			raise StopIteration()
+
+def IsPrime(integer):
+	if integer > 1:
+		for number in range(2, integer):
+			if(integer % number) == 0:
+				return False
+			else:
+				continue
+		return True
+
+def generator1(n):
+	i = 0
+	result = -1
+	while i < n:
+		yield result
+		i += 1
+		result -= 2
+
+def generator2(n):
+	i = 0
+	f1 = 1
+	f2 = 1
+	while i < n:
+		yield f1
+		temp = f1
+		f1 = f2
+		f2 = temp + f2
+		i += 1
+
+def generator3(n):
+	i = 1
+	while i <= n:
+		yield int((i * (i + 1)) / 2)
+		i += 1
 
 # Use nbrValues as the number of values to generate for Exercises 1-5
 nbrValues = int(input("What is the number of items you want to generate?\n"))
@@ -60,7 +98,8 @@ print("\n")
 ###############################################################
 print("\n%-16s" % "Odd Negatives: ", end=' ')
 
-# TODO: put your code here
+for i in generator1(nbrValues):
+	print(i, end=" ")
 
 # Print an end of line character after all of the values
 print()
@@ -70,7 +109,8 @@ print()
 ###############################################################
 print("\n%-16s" % "Fibonacci: ", end=' ')
 
-# TODO: put your code here
+for i in generator2(nbrValues):
+	print(i, end=" ")
 
 # Print an end of line character after all of the values
 print()
@@ -80,7 +120,8 @@ print()
 ###############################################################
 print("\n%-16s" % "Triangular: ", end=' ')
 
-# TODO: put your code here
+for i in generator3(nbrValues):
+	print(i, end=" ")
 
 # Print an end of line character after all of the values
 print()
@@ -92,26 +133,46 @@ print("\n%-16s" % "Ice Cream: ")
 
 # TODO: Make this function a Decorator
 def addBrownie(func):
-	print("Adding Brownie")
+	def wrapper():
+		print("Adding Brownie")
+		func()
+	return wrapper
 
 # TODO: Make this function a Decorator
 def addBanana(func):
-	print("Adding Banana")
+	def wrapper():
+		print("Adding Banana")
+		func()
+	return wrapper
 
 # TODO: Make this function a Decorator
 def addSyrup(func):
-	print("Adding Chocolate Syrup")
+	def wrapper():
+		func()
+		print("Adding Chocolate Syrup")
+	return wrapper
 
 # TODO: Make this function a Decorator
 def addNuts(func):
-	print("Adding Nuts")
+	def wrapper():
+		print("Adding Nuts")
+		func()
+	return wrapper
 
 # TODO: Make this function a Decorator
 def addCherry(func):
-	print("Adding the Cherry on Top!")
+	def wrapper():
+		func()
+		print("Adding the Cherry on Top!")
+	return wrapper
 
 # TODO: Add Decorators to this function
 # DO NOT MODIFY ANYTHING BELOW THIS LINE
+@addBrownie
+@addBanana
+@addSyrup
+@addNuts
+@addCherry
 def addIceCream():
 	print("Adding Ice Cream")
 
